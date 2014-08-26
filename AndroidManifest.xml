@@ -32,6 +32,10 @@
             android:name="kh.spaceclub.spaceballoon.activity.CameraActivity"
             android:label="@string/app_name" >
         </activity>
+        <activity
+            android:name="kh.spaceclub.spaceballoon.activity.DatalistActivity"
+            android:label="@string/app_name" >
+        </activity>
     </application>
 
 </manifest>
