@@ -28,6 +28,8 @@ public class DatalistActivity extends AbstractBaseActivity {
 		setContentView(R.layout.activity_datalist);
 		
 		mDatalist = (ListView)findViewById(R.id.datalist);
+		TextView emptyTextView = (TextView)findViewById(R.id.emptyTextView);
+		mDatalist.setEmptyView(emptyTextView);
 		final List<PictureDto> data = getPictureDao().getData();
 		mDatalist.setAdapter(new BaseAdapter() {
 
