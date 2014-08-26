@@ -1,13 +1,11 @@
 package kh.spaceclub.spaceballoon.location;
 
 import java.util.Timer;
-import java.util.TimerTask;
 
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Handler;
 
 public class LocationHelper implements LocationListener {
 
@@ -42,21 +40,7 @@ public class LocationHelper implements LocationListener {
 		if (mLocationManager == null || !mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
 			return;
 		
-		final Handler handler = new Handler();
-		final LocationListener self = this;
-		mTimer = new Timer(true);
-		mTimer.scheduleAtFixedRate(new TimerTask() {
-			@Override
-			public void run() {
-				handler.post(new Runnable() {
-					@Override
-					public void run() {
-						// 位置情報の取得を開始します。
-						mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, mInterval, 0, self);
-					}
-				});
-			}
-		}, 0, mInterval);
+		mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, mInterval, 0, this);
 	}
 	
 	public void stop() {

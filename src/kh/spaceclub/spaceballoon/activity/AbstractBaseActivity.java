@@ -120,7 +120,7 @@ public abstract class AbstractBaseActivity  extends ActionBarActivity {
 						clas = CameraActivity.class;
 						break;
 					case 2:
-						clas = CameraActivity.class;
+						clas = DatalistActivity.class;
 						break;
 				}
 				Intent intent=new Intent(getApplicationContext(), clas);

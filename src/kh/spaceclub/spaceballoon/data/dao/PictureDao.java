@@ -1,9 +1,18 @@
 package kh.spaceclub.spaceballoon.data.dao;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
 import kh.spaceclub.spaceballoon.data.DatabaseHelper;
 import kh.spaceclub.spaceballoon.data.dto.PictureDto;
 import android.content.Context;
+import android.database.sqlite.SQLiteCursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 public class PictureDao {
 
@@ -31,5 +40,36 @@ public class PictureDao {
 		SQLiteDatabase db = getDatabase();
 		String sql = "INSERT INTO picture (file_path, latitude, longitude, altitude, created) VALUES (?, ?, ?, ?, datetime('now', 'localtime'));";
 		db.execSQL(sql, new Object[] { dto.getFilePath(), dto.getLatitude(), dto.getLongitude(), dto.getAltitude() });
+	}
+	
+	public List<PictureDto> getData() {
+		List<PictureDto> ret = new ArrayList<PictureDto>();
+		SQLiteDatabase db = getDatabase();
+		String sql = "SELECT * FROM picture ORDER BY id ASC";
+		SQLiteCursor c = (SQLiteCursor)db.rawQuery(sql, null);
+		int rowcount = c.getCount();
+		if (rowcount < 1)
+			return ret;
+		
+		if (c.moveToFirst()) {
+			do {
+				PictureDto row = new PictureDto();
+				row.setId(c.getInt(c.getColumnIndex("id")));
+				row.setFilePath(c.getString(c.getColumnIndex("file_path")));
+				row.setLatitude(c.getDouble(c.getColumnIndex("latitude")));
+				row.setLongitude(c.getDouble(c.getColumnIndex("longitude")));
+				row.setAltitude(c.getDouble(c.getColumnIndex("altitude")));
+				String strCreateAt = c.getString(c.getColumnIndex("created"));
+				Date created = null;
+				try {
+					created = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.TAIWAN).parse(strCreateAt);
+				} catch (ParseException e) {
+					Log.e("Debug", "date parse error:" + strCreateAt);
+				}
+				row.setCreated(created);
+				ret.add(row);
+			} while (c.moveToNext());
+		}
+		return ret;
 	}
 }
