@@ -1,6 +1,7 @@
 package kh.spaceclub.spaceballoon.activity;
 
 import kh.spaceclub.spaceballoon.R;
+import kh.spaceclub.spaceballoon.data.dao.PictureDao;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -17,6 +18,14 @@ import android.widget.ListView;
 
 public abstract class AbstractBaseActivity  extends ActionBarActivity {
 
+	private PictureDao pictureDao;
+	protected PictureDao getPictureDao() {
+		if (pictureDao != null)
+			return pictureDao;
+		pictureDao = new PictureDao(this);
+		return pictureDao;
+	}
+	
 	private DrawerLayout mDrawerLayout;
 	protected DrawerLayout getDrawerLayout() {
 		if (mDrawerLayout != null)
@@ -25,7 +34,6 @@ public abstract class AbstractBaseActivity  extends ActionBarActivity {
 		return mDrawerLayout;
 	}
 	protected abstract DrawerLayout getDrawerLayoutCore();
-	
 	
 	private ListView mDrawerList;
 	protected ListView getDrawerList() {
