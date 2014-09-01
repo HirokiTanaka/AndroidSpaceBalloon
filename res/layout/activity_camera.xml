@@ -6,10 +6,23 @@
     android:layout_height="match_parent">
   
     <!-- メインコンテンツ -->
-    <FrameLayout
-        android:id="@+id/camera_preview"
+   <LinearLayout android:id="@+id/datalist_wrap"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+        <Button
+            android:id="@+id/cameraButton"
+            android:text="@string/camera_start"
+            android:layout_height="wrap_content" 
+            android:layout_width="match_parent"
+            android:layout_margin="10dp"
+            android:textSize="20sp" />
+        <FrameLayout
+        	android:id="@+id/camera_preview"
+        	android:layout_width="match_parent"
+        	android:layout_height="match_parent"
+        	android:layout_margin="10dp" />
+    </LinearLayout>
   
     <!-- ナビゲーションドロワー用 -->
     <ListView

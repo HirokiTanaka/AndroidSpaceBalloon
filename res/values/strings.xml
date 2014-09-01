@@ -6,6 +6,8 @@
     <string name="open">Open</string>
     <string name="close">Close</string>
     <string name="empty_msg">No items found</string>
+    <string name="camera_start">Start</string>
+    <string name="camera_stop">Stop</string>
     <color name="black">#000000</color>
 
 </resources>

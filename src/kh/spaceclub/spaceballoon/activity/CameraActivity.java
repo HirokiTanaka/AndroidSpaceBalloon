@@ -8,7 +8,7 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import kh.spaceclub.spaceballoon.R;
-import kh.spaceclub.spaceballoon.camera.CameraPreview;
+import kh.spaceclub.spaceballoon.camera.CameraAutoPreview;
 import kh.spaceclub.spaceballoon.data.dto.PictureDto;
 import kh.spaceclub.spaceballoon.location.LocationHelper;
 import android.annotation.SuppressLint;
@@ -27,13 +27,11 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 
 public class CameraActivity extends AbstractBaseActivity {
-
-	private CameraPreview mCameraPreview;
-	private boolean mIsTakingPicture = false;
 	
 	private LocationHelper mLocationHelper;
 	private LocationHelper getLocationHelper() {
@@ -43,21 +41,43 @@ public class CameraActivity extends AbstractBaseActivity {
 		return mLocationHelper;
 	}
 	
+	private Button mCameraButton;
+	private CameraAutoPreview mCameraPreview;
+	private boolean adjustFlg = false; // 重複起動防止
+	private boolean mIsCameraAutoActivated = false;
+	private boolean isSavingData = false; // 多重保存防止
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_camera);
 		FrameLayout preview = (FrameLayout)findViewById(R.id.camera_preview);
-		mCameraPreview = new CameraPreview(this);
+		mCameraPreview = new CameraAutoPreview(this, mPicJpgListener);
 		preview.addView(mCameraPreview);
-		preview.setOnTouchListener(new OnTouchListener() {
+		
+		mCameraButton = (Button)findViewById(R.id.cameraButton);
+		mCameraButton.setOnTouchListener(new OnTouchListener() {
 			@SuppressLint("ClickableViewAccessibility")
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				if (!mIsTakingPicture)
-				{
-					mIsTakingPicture = true;
-					mCameraPreview.takePicture(mPicJpgListener);
+				
+				int action = event.getAction();
+				switch(action & MotionEvent.ACTION_MASK) {
+				case MotionEvent.ACTION_UP:
+					if (adjustFlg)
+						return true;
+					adjustFlg = true;
+					if (mIsCameraAutoActivated) {
+						mCameraPreview.stop();
+						mCameraButton.setText(R.string.camera_start);
+						mIsCameraAutoActivated = false;
+					} else {
+						mIsCameraAutoActivated = true;
+						mCameraButton.setText(R.string.camera_stop);
+						mCameraPreview.start();
+					}
+					adjustFlg = false;
+					break;
 				}
 				return true;
 			}
@@ -69,8 +89,11 @@ public class CameraActivity extends AbstractBaseActivity {
 	private PictureCallback mPicJpgListener = new PictureCallback() {
 		@Override
 		public void onPictureTaken(byte[] data, Camera camera) {
-			if (data == null)
-				return;
+			
+			if (data == null) return;
+			
+			if (isSavingData) return;
+			isSavingData = true;
 			
             String saveDir = Environment.getExternalStorageDirectory().getPath() + "/space_balloon";
 
@@ -122,8 +145,7 @@ public class CameraActivity extends AbstractBaseActivity {
             
             // takePicture するとプレビューが停止するので、再度プレビュースタート
             mCameraPreview.startPreview();
-
-            mIsTakingPicture = false;
+            isSavingData = false;
 		}
 	};
 	
@@ -151,6 +173,8 @@ public class CameraActivity extends AbstractBaseActivity {
 	@Override
 	protected void onResume() {
 		getLocationHelper().start();
+		if (mIsCameraAutoActivated)
+			mCameraPreview.start();
 		super.onResume();
 	}
 
