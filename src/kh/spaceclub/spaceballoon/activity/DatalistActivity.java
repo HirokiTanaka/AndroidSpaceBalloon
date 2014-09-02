@@ -3,17 +3,19 @@ package kh.spaceclub.spaceballoon.activity;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import kh.spaceclub.spaceballoon.R;
+import kh.spaceclub.spaceballoon.SpaceballoonConst;
 import kh.spaceclub.spaceballoon.data.dto.PictureDto;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -73,7 +75,7 @@ public class DatalistActivity extends AbstractBaseActivity {
 					if (created == null) {
 						strCreated = "";
 					} else {
-						strCreated = new SimpleDateFormat("dd/MM HH:mm:ss", Locale.TAIWAN).format(created);
+						strCreated = new SimpleDateFormat("dd/MM HH:mm:ss", SpaceballoonConst.APP_LOCALE).format(created);
 					}
 					textView2.setText(strCreated);
 					textView3.setText(String.format("La/Lo/Al:%f/%f/%f", row.getLatitude(), row.getLongitude(), row.getAltitude()));
@@ -81,6 +83,16 @@ public class DatalistActivity extends AbstractBaseActivity {
 			    return v;
 			}		
 		});
+		
+        mDatalist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
+                ListView listView = (ListView)parent;
+                PictureDto item = (PictureDto)listView.getItemAtPosition(pos);
+                Intent intent = new Intent(DatalistActivity.this, DataDetailActivity.class);
+                intent.putExtra(SpaceballoonConst.IntentKey.DATADETAIL, String.valueOf(item.getId()));
+                startActivity(intent);
+            }
+        });
 		
 		super.initActionBar();
 	}

@@ -123,7 +123,7 @@ public abstract class AbstractBaseActivity  extends ActionBarActivity {
 						clas = DatalistActivity.class;
 						break;
 				}
-				Intent intent=new Intent(getApplicationContext(), clas);
+				Intent intent = new Intent(getApplicationContext(), clas);
 		        startActivity(intent);
 			}
 		};

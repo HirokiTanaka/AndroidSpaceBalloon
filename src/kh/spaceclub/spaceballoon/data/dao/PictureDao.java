@@ -5,8 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
+import kh.spaceclub.spaceballoon.SpaceballoonConst;
 import kh.spaceclub.spaceballoon.data.DatabaseHelper;
 import kh.spaceclub.spaceballoon.data.dto.PictureDto;
 import android.content.Context;
@@ -42,6 +42,21 @@ public class PictureDao {
 		db.execSQL(sql, new Object[] { dto.getFilePath(), dto.getLatitude(), dto.getLongitude(), dto.getAltitude() });
 	}
 	
+	public PictureDto getDataById(int id) {
+		SQLiteDatabase db = getDatabase();
+		String sql = "SELECT * FROM picture WHERE id = ?";
+		SQLiteCursor c = (SQLiteCursor)db.rawQuery(sql, new String[] { String.valueOf(id) });
+		int rowcount = c.getCount();
+		if (rowcount < 1)
+			return null;
+		
+		if (!c.moveToFirst()) {
+			return null;
+		}
+		
+		return createDto(c);
+	}
+	
 	public List<PictureDto> getData() {
 		List<PictureDto> ret = new ArrayList<PictureDto>();
 		SQLiteDatabase db = getDatabase();
@@ -53,23 +68,27 @@ public class PictureDao {
 		
 		if (c.moveToFirst()) {
 			do {
-				PictureDto row = new PictureDto();
-				row.setId(c.getInt(c.getColumnIndex("id")));
-				row.setFilePath(c.getString(c.getColumnIndex("file_path")));
-				row.setLatitude(c.getDouble(c.getColumnIndex("latitude")));
-				row.setLongitude(c.getDouble(c.getColumnIndex("longitude")));
-				row.setAltitude(c.getDouble(c.getColumnIndex("altitude")));
-				String strCreateAt = c.getString(c.getColumnIndex("created"));
-				Date created = null;
-				try {
-					created = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.TAIWAN).parse(strCreateAt);
-				} catch (ParseException e) {
-					Log.e("Debug", "date parse error:" + strCreateAt);
-				}
-				row.setCreated(created);
-				ret.add(row);
+				ret.add(createDto(c));
 			} while (c.moveToNext());
 		}
 		return ret;
+	}
+	
+	private PictureDto createDto(SQLiteCursor c) {
+		PictureDto row = new PictureDto();
+		row.setId(c.getInt(c.getColumnIndex("id")));
+		row.setFilePath(c.getString(c.getColumnIndex("file_path")));
+		row.setLatitude(c.getDouble(c.getColumnIndex("latitude")));
+		row.setLongitude(c.getDouble(c.getColumnIndex("longitude")));
+		row.setAltitude(c.getDouble(c.getColumnIndex("altitude")));
+		String strCreateAt = c.getString(c.getColumnIndex("created"));
+		Date created = null;
+		try {
+			created = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", SpaceballoonConst.APP_LOCALE).parse(strCreateAt);
+		} catch (ParseException e) {
+			Log.e("Debug", "date parse error:" + strCreateAt);
+		}
+		row.setCreated(created);
+		return row;
 	}
 }

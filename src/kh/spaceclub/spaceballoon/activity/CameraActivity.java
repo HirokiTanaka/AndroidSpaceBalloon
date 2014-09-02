@@ -5,9 +5,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Locale;
 
 import kh.spaceclub.spaceballoon.R;
+import kh.spaceclub.spaceballoon.SpaceballoonConst;
 import kh.spaceclub.spaceballoon.camera.CameraAutoPreview;
 import kh.spaceclub.spaceballoon.data.dto.PictureDto;
 import kh.spaceclub.spaceballoon.location.LocationHelper;
@@ -107,7 +107,7 @@ public class CameraActivity extends AbstractBaseActivity {
 
             // 画像保存パス
             Calendar cal = Calendar.getInstance();
-            SimpleDateFormat sf = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.TAIWAN);
+            SimpleDateFormat sf = new SimpleDateFormat("yyyyMMdd_HHmmss", SpaceballoonConst.APP_LOCALE);
             String imgPath = saveDir + "/" + sf.format(cal.getTime()) + ".jpg";
 
             // ファイル保存

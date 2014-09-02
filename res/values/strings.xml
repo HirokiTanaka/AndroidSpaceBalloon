@@ -8,6 +8,12 @@
     <string name="empty_msg">No items found</string>
     <string name="camera_start">Start</string>
     <string name="camera_stop">Stop</string>
+    <string name="created">date</string>
+    <string name="gps">gps</string>
+    <string name="latitude">latitude</string>
+    <string name="longitude">longitude</string>
+    <string name="altitude">altitude</string>
+    <string name="datadetail_image">photos taken by this app.</string>
     <color name="black">#000000</color>
 
 </resources>

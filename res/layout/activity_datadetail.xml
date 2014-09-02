@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+  
+    <!-- メインコンテンツ -->
+    <LinearLayout android:id="@+id/datadetail_wrap"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+        <TableLayout
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:stretchColumns="1"
+		    android:background="#000"
+		    android:padding="3dp" >
+	    	<TableRow>
+		        <TextView android:text="@string/created" style="@style/DatadetailHead" />
+		        <TextView android:id="@+id/datadetail_created" style="@style/DatadetailData" />
+	    	</TableRow>
+	    	<TableRow>
+	    	    <TextView android:text="@string/gps" style="@style/DatadetailHead"
+            		android:layout_span="2" />
+	    	</TableRow>
+	    	<TableRow>
+		        <TextView android:text="@string/latitude" style="@style/DatadetailHead" />
+		        <TextView android:id="@+id/datadetail_latitude" style="@style/DatadetailData" />
+	    	</TableRow>
+	    	<TableRow>
+		        <TextView android:text="@string/longitude" style="@style/DatadetailHead" />
+		        <TextView android:id="@+id/datadetail_longitude" style="@style/DatadetailData" />
+	    	</TableRow>
+	    	<TableRow>
+		        <TextView android:text="@string/altitude" style="@style/DatadetailHead" />
+		        <TextView android:id="@+id/datadetail_altitude" style="@style/DatadetailData" />
+	    	</TableRow>
+	    </TableLayout>
+        <ImageView android:id="@+id/datadetail_image"
+            android:contentDescription="@string/datadetail_image"
+        	android:layout_width="match_parent"
+        	android:layout_height="match_parent"
+        	android:layout_margin="10dp" />
+    </LinearLayout>
+  
+    <!-- ナビゲーションドロワー用 -->
+    <ListView
+        android:id="@+id/left_drawer"
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:choiceMode="singleChoice"
+        android:background="#eee" />
+  
+</android.support.v4.widget.DrawerLayout>
